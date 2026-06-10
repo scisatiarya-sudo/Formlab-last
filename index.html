@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FormLab">
+<title>FormLab</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0e0f11;--bg2:#16181c;--bg3:#1e2026;--bg4:#252830;--bg5:#2e3138;
+  --border:#2e3138;--border2:#3a3f4a;
+  --text:#e8eaf0;--text2:#9ba3b2;--text3:#6b7280;
+  --green:#22c55e;--green-bg:#0d2818;--green-border:rgba(34,197,94,0.25);
+  --blue:#60a5fa;--blue-bg:#0a1929;--blue-border:rgba(96,165,250,0.25);
+  --orange:#f59e0b;--orange-bg:#1f1408;--orange-border:rgba(245,158,11,0.25);
+  --red:#f87171;--red-bg:#1f0a0a;--red-border:rgba(248,113,113,0.25);
+  --purple:#a78bfa;--purple-bg:#150f2a;--purple-border:rgba(167,139,250,0.25);
+  --radius:10px;--radius-lg:14px;
+  font-family:'DM Sans',sans-serif;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text)}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh;max-width:1100px;margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;flex-shrink:0;border-bottom:1px solid var(--border)}
+.logo{font-size:20px;font-weight:600;letter-spacing:-0.5px}
+.logo span{color:var(--green)}
+.topbar-right{display:flex;gap:8px;align-items:center}
+.date-badge{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--text2)}
+.streak-badge{background:var(--orange-bg);border:1px solid var(--orange-border);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--orange);font-weight:600;display:flex;align-items:center;gap:4px}
+.bottom-nav{display:flex;background:var(--bg2);border-top:1px solid var(--border);flex-shrink:0;padding-bottom:env(safe-area-inset-bottom)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 8px;background:transparent;border:none;color:var(--text3);cursor:pointer;font-family:'DM Sans',sans-serif;gap:3px;transition:color 0.15s}
+.nav-btn i{font-size:22px}
+.nav-btn span{font-size:10px;font-weight:500}
+.nav-btn.active{color:var(--green)}
+.content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:16px}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:12px}
+.card-title{font-size:11px;font-weight:600;letter-spacing:1px;color:var(--text3);text-transform:uppercase;margin-bottom:12px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.stat-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px}
+.stat-label{font-size:11px;color:var(--text3);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.4px}
+.stat-value{font-size:24px;font-weight:600;line-height:1}
+.stat-unit{font-size:13px;color:var(--text3);font-weight:400}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:3px}
+.pbar{background:var(--bg5);border-radius:3px;height:5px;margin-top:7px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:3px;transition:width 0.4s}
+.tag{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500;display:inline-flex;align-items:center;gap:3px}
+.tag-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.tag-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+.tag-orange{background:var(--orange-bg);color:var(--orange);border:1px solid var(--orange-border)}
+.tag-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.tag-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
+.alert{border-radius:var(--radius);padding:10px 12px;font-size:13px;display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;line-height:1.4}
+.alert i{font-size:16px;flex-shrink:0;margin-top:1px}
+.alert-warning{background:var(--orange-bg);border:1px solid var(--orange-border);color:var(--orange)}
+.alert-info{background:var(--blue-bg);border:1px solid var(--blue-border);color:var(--blue)}
+.alert-success{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green)}
+.alert-danger{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)}
+.btn{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px 16px;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all 0.15s;-webkit-appearance:none}
+.btn:active{transform:scale(0.97);background:var(--bg4)}
+.btn-green{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
+.btn-green:active{background:rgba(34,197,94,0.18)}
+.btn-blue{background:var(--blue-bg);border-color:var(--blue-border);color:var(--blue)}
+.btn-orange{background:var(--orange-bg);border-color:var(--orange-border);color:var(--orange)}
+.btn-red{background:var(--red-bg);border-color:var(--red-border);color:var(--red)}
+.btn-lg{padding:14px 20px;font-size:15px;border-radius:12px;width:100%;justify-content:center}
+.btn-icon{padding:8px;border-radius:8px}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.seance-picker{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.seance-btn{background:var(--bg3);border:2px solid var(--border);border-radius:var(--radius-lg);padding:14px 8px;text-align:center;cursor:pointer;transition:all 0.15s;-webkit-appearance:none;font-family:'DM Sans',sans-serif}
+.seance-btn:active{transform:scale(0.97)}
+.seance-btn.sel-A{border-color:var(--green);background:var(--green-bg)}
+.seance-btn.sel-B{border-color:var(--blue);background:var(--blue-bg)}
+.seance-btn.sel-C{border-color:var(--orange);background:var(--orange-bg)}
+.seance-btn.sel-HIIT{border-color:var(--red);background:var(--red-bg)}
+.seance-btn .sb-letter{font-size:22px;font-weight:700;margin-bottom:2px}
+.seance-btn .sb-name{font-size:11px;color:var(--text2)}
+.sel-A .sb-letter{color:var(--green)}
+.sel-B .sb-letter{color:var(--blue)}
+.sel-C .sb-letter{color:var(--orange)}
+.sel-HIIT .sb-letter{color:var(--red)}
+.ex-picker-list{display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.ex-pick-btn{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:space-between;transition:all 0.15s;width:100%;-webkit-appearance:none}
+.ex-pick-btn:active{transform:scale(0.98);background:var(--bg4)}
+.ex-pick-btn.selected{border-color:var(--green);background:var(--green-bg)}
+.ex-pick-name{font-size:14px;font-weight:500;color:var(--text)}
+.ex-pick-muscle{font-size:11px;color:var(--text3);margin-top:2px}
+.ex-pick-btn.selected .ex-pick-name{color:var(--green)}
+.ex-pick-btn.selected i{color:var(--green)}
+.serie-row{display:grid;grid-template-columns:auto 1fr 1fr auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.serie-row:last-child{border-bottom:none}
+.serie-num{width:28px;height:28px;border-radius:50%;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text2);flex-shrink:0}
+.num-input-wrap{display:flex;flex-direction:column;gap:2px}
+.num-input-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px}
+.num-stepper{display:flex;align-items:center;background:var(--bg4);border-radius:8px;overflow:hidden;border:1px solid var(--border2)}
+.step-btn{background:transparent;border:none;color:var(--text2);width:40px;height:42px;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;flex-shrink:0;transition:background 0.1s;-webkit-appearance:none}
+.step-btn:active{background:var(--bg5);color:var(--text)}
+.step-val{min-width:38px;text-align:center;font-size:16px;font-weight:600;color:var(--text);font-family:'DM Mono',monospace;padding:0 4px}
+.serie-done-btn{width:42px;height:42px;border-radius:8px;border:1px solid var(--border2);background:var(--bg4);color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;transition:all 0.15s;flex-shrink:0;-webkit-appearance:none}
+.serie-done-btn.done{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
+.add-serie-btn{width:100%;background:transparent;border:1px dashed var(--border2);border-radius:8px;padding:10px;color:var(--text3);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;transition:all 0.15s;-webkit-appearance:none}
+.add-serie-btn:active{background:var(--bg4)}
+.rest-timer{background:var(--bg4);border-radius:var(--radius);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.timer-display{font-size:22px;font-weight:600;font-family:'DM Mono',monospace;color:var(--orange)}
+.timer-label{font-size:11px;color:var(--text3);margin-bottom:2px}
+.log-session{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;margin-bottom:10px}
+.log-session-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px}
+.log-session-date{font-size:13px;font-weight:600}
+.log-ex-item{padding:8px 0;border-bottom:1px solid var(--border)}
+.log-ex-item:last-child{border-bottom:none}
+.log-ex-name{font-size:13px;font-weight:500;margin-bottom:4px}
+.log-sets-row{display:flex;gap:6px;flex-wrap:wrap}
+.log-set-chip{background:var(--bg4);border-radius:6px;padding:4px 9px;font-size:12px;font-family:'DM Mono',monospace;color:var(--text2)}
+.macro-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.macro-row:last-child{border-bottom:none}
+.macro-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.macro-name{font-size:14px;font-weight:500;flex:1}
+.macro-val{font-size:14px;font-weight:600;font-family:'DM Mono',monospace}
+.macro-target{font-size:12px;color:var(--text3);min-width:60px;text-align:right}
+.week-strip{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.day-pill{flex-shrink:0;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center;min-width:46px}
+.day-pill.padel{background:var(--blue-bg);border-color:var(--blue-border)}
+.day-pill.hiit-day{background:var(--red-bg);border-color:var(--red-border)}
+.day-pill.today{border-color:var(--text2);border-width:2px}
+.day-name{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase}
+.day-type{font-size:10px;font-weight:600;margin-top:3px}
+.prog-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-label{font-size:12px;color:var(--text2)}
+.form-input{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:11px 13px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;-webkit-appearance:none;width:100%;transition:border-color 0.15s}
+.form-input:focus{border-color:var(--border2)}
+.form-select{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:11px 13px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;-webkit-appearance:none;width:100%}
+.prog-table{width:100%;font-size:12px;border-collapse:separate;border-spacing:0 4px}
+.prog-table th{font-size:10px;color:var(--text3);text-align:left;padding:0 8px 4px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600}
+.prog-table td{padding:9px 8px;background:var(--bg3)}
+.prog-table td:first-child{border-radius:8px 0 0 8px}
+.prog-table td:last-child{border-radius:0 8px 8px 0}
+.gloss-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:600px){.gloss-grid{grid-template-columns:1fr}}
+.gloss-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px 13px}
+.gloss-term{font-size:13px;font-weight:600;color:var(--green);margin-bottom:4px}
+.gloss-def{font-size:12px;color:var(--text2);line-height:1.5}
+.meal-block{background:var(--bg3);border-radius:var(--radius);padding:12px 13px;margin-bottom:8px}
+.meal-time{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:3px}
+.meal-name{font-size:13px;margin-bottom:7px;line-height:1.4;color:var(--text2)}
+.meal-tags{display:flex;gap:5px;flex-wrap:wrap}
+.ex-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:13px;margin-bottom:8px;cursor:pointer;transition:border-color 0.15s}
+.ex-card:active{background:var(--bg4)}
+.ex-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:7px}
+.ex-card-name{font-size:14px;font-weight:500}
+.ex-card-meta{display:flex;gap:10px;flex-wrap:wrap}
+.ex-meta-item{display:flex;align-items:center;gap:3px;font-size:12px;color:var(--text2)}
+.ex-meta-item i{font-size:13px;color:var(--text3)}
+.ex-card-desc{font-size:12px;color:var(--text2);line-height:1.5;margin-top:9px;padding-top:9px;border-top:1px solid var(--border);display:none}
+.ex-card-desc.open{display:block}
+.seg-tabs{display:flex;gap:3px;background:var(--bg3);border-radius:var(--radius);padding:3px;margin-bottom:14px;border:1px solid var(--border)}
+.seg-tab{flex:1;padding:8px 4px;border:none;background:transparent;color:var(--text3);border-radius:8px;cursor:pointer;font-size:11px;font-weight:500;font-family:'DM Sans',sans-serif;transition:all 0.15s;-webkit-appearance:none;white-space:nowrap}
+.seg-tab.active{background:var(--bg);color:var(--text)}
+.step-row{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)}
+.step-row:last-child{border-bottom:none}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--green-bg);border:1px solid var(--green-border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--green);flex-shrink:0}
+.step-title{font-size:13px;font-weight:500;margin-bottom:2px}
+.step-desc{font-size:12px;color:var(--text2);line-height:1.4}
+.divider{height:1px;background:var(--border);margin:12px 0}
+.flex-between{display:flex;align-items:center;justify-content:space-between}
+.mt8{margin-top:8px}
+.mb8{margin-bottom:8px}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg4);border:1px solid var(--border2);border-radius:10px;padding:10px 18px;font-size:13px;color:var(--text);opacity:0;transition:all 0.25s;pointer-events:none;z-index:999;white-space:nowrap;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.empty-state{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty-state i{font-size:40px;display:block;margin-bottom:12px}
+.empty-state p{font-size:14px}
+@media(min-width:768px){
+  .stat-grid{grid-template-columns:repeat(4,1fr)}
+  .seance-picker{grid-template-columns:repeat(4,1fr)}
+  .prog-form-grid{grid-template-columns:repeat(4,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="logo">FORM<span>LAB</span></div>
+    <div class="topbar-right">
+      <div class="date-badge" id="dateDisplay"></div>
+      <div class="streak-badge"><i class="ti ti-flame"></i><span id="streakCount">0</span>j</div>
+    </div>
+  </div>
+
+  <div class="content" id="mainContent">
+
+    <!-- DASHBOARD -->
+    <div id="panel-dashboard" class="panel active">
+      <div class="alert alert-success mb8" id="todayAlert"><i class="ti ti-info-circle" id="todayIcon"></i><span id="todayMsg">Chargement...</span></div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Calories cible</div>
+          <div class="stat-value" style="color:var(--blue)" id="dashCal">1 850<span class="stat-unit"> kcal</span></div>
+          <div class="stat-sub" id="dashCalType">Jour training</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Protéines</div>
+          <div class="stat-value" style="color:var(--green)">145<span class="stat-unit"> g</span></div>
+          <div class="pbar"><div class="pbar-fill" style="background:var(--green);width:100%"></div></div>
+          <div class="stat-sub">Ancre fixe — chaque jour</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Poids (lundi)</div>
+          <div class="stat-value" style="color:var(--purple)" id="dashPoids">—<span class="stat-unit"> kg</span></div>
+          <div class="stat-sub" id="dashPoidsEvo" style="color:var(--text3)">Ajoute ta première mesure</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Tour de taille</div>
+          <div class="stat-value" style="color:var(--orange)" id="dashTaille">—<span class="stat-unit"> cm</span></div>
+          <div class="stat-sub" id="dashTailleEvo" style="color:var(--text3)">Indicateur clé abdos</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Semaine en cours</div>
+        <div class="week-strip" id="weekStrip"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Mode Express — 20 min</div>
+        <div style="background:linear-gradient(135deg,var(--orange-bg),var(--bg3));border:1px solid var(--orange-border);border-radius:var(--radius);padding:12px">
+          <div style="font-size:13px;font-weight:600;color:var(--orange);margin-bottom:8px;display:flex;align-items:center;gap:6px"><i class="ti ti-bolt"></i> Version minimale — jours chargés</div>
+          <div style="font-size:12px;color:var(--text2);border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:6px;display:flex;justify-content:space-between"><span>Pompes prise normale</span><span style="font-family:'DM Mono',monospace;color:var(--text3)">3×max-2 · 45s</span></div>
+          <div style="font-size:12px;color:var(--text2);border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:6px;display:flex;justify-content:space-between"><span>Curl + Développé épaules (superset)</span><span style="font-family:'DM Mono',monospace;color:var(--text3)">3×12+10</span></div>
+          <div style="font-size:12px;color:var(--text2);border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:6px;display:flex;justify-content:space-between"><span>Hip hinge KB ou Pont fessier</span><span style="font-family:'DM Mono',monospace;color:var(--text3)">3×15 · 45s</span></div>
+          <div style="font-size:12px;color:var(--text2);display:flex;justify-content:space-between"><span>Gainage planche</span><span style="font-family:'DM Mono',monospace;color:var(--text3)">2×45s</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOG SEANCE -->
+    <div id="panel-log" class="panel">
+      <div class="seg-tabs">
+        <button class="seg-tab active" onclick="showLogTab('new',this)">Nouvelle séance</button>
+        <button class="seg-tab" onclick="showLogTab('history',this)">Historique</button>
+      </div>
+      <div id="logTab-new">
+        <div class="card" id="stepSeance">
+          <div class="card-title">1. Quelle séance ?</div>
+          <div class="seance-picker">
+            <button class="seance-btn" onclick="selectSeance('A',this)"><div class="sb-letter">A</div><div class="sb-name">Poussée</div></button>
+            <button class="seance-btn" onclick="selectSeance('B',this)"><div class="sb-letter">B</div><div class="sb-name">Tirage</div></button>
+            <button class="seance-btn" onclick="selectSeance('C',this)"><div class="sb-letter">C</div><div class="sb-name">Express</div></button>
+            <button class="seance-btn" onclick="selectSeance('HIIT',this)"><div class="sb-letter">H</div><div class="sb-name">HIIT</div></button>
+          </div>
+          <div id="seanceAlert" style="display:none"></div>
+        </div>
+        <div class="card" id="stepExercices" style="display:none">
+          <div class="flex-between mb8">
+            <div class="card-title" style="margin-bottom:0">2. Exercice en cours</div>
+            <button class="btn btn-icon" onclick="resetSeance()"><i class="ti ti-x"></i></button>
+          </div>
+          <div id="exPickerList" class="ex-picker-list"></div>
+        </div>
+        <div id="stepSeries" style="display:none">
+          <div class="card">
+            <div class="flex-between mb8">
+              <div>
+                <div style="font-size:15px;font-weight:600" id="currentExName">—</div>
+                <div style="font-size:12px;color:var(--text3);margin-top:2px" id="currentExMuscle"></div>
+              </div>
+              <button class="btn btn-icon" onclick="backToExList()"><i class="ti ti-chevron-left"></i></button>
+            </div>
+            <div id="currentExDesc" style="font-size:12px;color:var(--text2);line-height:1.5;padding:10px;background:var(--bg4);border-radius:8px;margin-bottom:12px"></div>
+            <div id="seriesContainer"></div>
+            <button class="add-serie-btn" onclick="addSerie()"><i class="ti ti-plus"></i> Ajouter une série</button>
+            <div class="rest-timer mt8" id="restTimerBlock" style="display:none">
+              <div>
+                <div class="timer-label">Repos</div>
+                <div class="timer-display" id="timerDisplay">—</div>
+              </div>
+              <div style="display:flex;gap:6px">
+                <button class="btn btn-icon" onclick="setTimer(45)"><span style="font-size:11px">45s</span></button>
+                <button class="btn btn-icon" onclick="setTimer(60)"><span style="font-size:11px">60s</span></button>
+                <button class="btn btn-icon btn-orange" onclick="setTimer(75)"><span style="font-size:11px">75s</span></button>
+                <button class="btn btn-icon" onclick="stopTimer()"><i class="ti ti-player-stop"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-green" style="flex:1" onclick="saveCurrentEx()"><i class="ti ti-check"></i> Valider cet exercice</button>
+            <button class="btn" onclick="backToExList()"><i class="ti ti-arrow-left"></i></button>
+          </div>
+        </div>
+        <div class="card mt8" id="currentSessionCard" style="display:none">
+          <div class="flex-between mb8">
+            <div class="card-title" style="margin-bottom:0">Séance en cours</div>
+            <span id="currentSessionType" class="tag"></span>
+          </div>
+          <div id="currentSessionSummary"></div>
+          <div class="divider"></div>
+          <button class="btn btn-green btn-lg" onclick="finishSession()"><i class="ti ti-device-floppy"></i> Terminer &amp; sauvegarder</button>
+        </div>
+      </div>
+      <div id="logTab-history" style="display:none">
+        <div id="historyList"></div>
+      </div>
+    </div>
+
+    <!-- PROGRAMME -->
+    <div id="panel-programme" class="panel">
+      <div class="seg-tabs">
+        <button class="seg-tab active" onclick="showProgTab('A',this)">A · Push</button>
+        <button class="seg-tab" onclick="showProgTab('B',this)">B · Pull</button>
+        <button class="seg-tab" onclick="showProgTab('C',this)">C · Express</button>
+        <button class="seg-tab" onclick="showProgTab('HIIT',this)">HIIT</button>
+        <button class="seg-tab" onclick="showProgTab('prog',this)">📈</button>
+      </div>
+      <div id="progTabContent"></div>
+    </div>
+
+    <!-- NUTRITION -->
+    <div id="panel-nutrition" class="panel">
+      <div class="card mb8">
+        <div class="flex-between mb8">
+          <div class="card-title" style="margin-bottom:0">Objectifs du jour</div>
+          <select class="form-select" style="width:auto;padding:5px 10px;font-size:12px" onchange="updateNutriDay(this.value)">
+            <option value="normal">Jour training</option>
+            <option value="padel">Jour padel</option>
+            <option value="repos">Jour repos</option>
+          </select>
+        </div>
+        <div class="macro-row"><div class="macro-dot" style="background:var(--blue)"></div><span class="macro-name">Calories</span><span class="macro-val" style="color:var(--blue)" id="nCal">1 850 kcal</span></div>
+        <div class="macro-row"><div class="macro-dot" style="background:var(--green)"></div><span class="macro-name">Protéines</span><span class="macro-val" style="color:var(--green)">145 g</span><span class="macro-target">ancre fixe</span></div>
+        <div class="macro-row"><div class="macro-dot" style="background:var(--blue)"></div><span class="macro-name">Glucides</span><span class="macro-val" style="color:var(--blue)" id="nGluc">146 g</span><span class="macro-target">levier</span></div>
+        <div class="macro-row"><div class="macro-dot" style="background:var(--orange)"></div><span class="macro-name">Lipides</span><span class="macro-val" style="color:var(--orange)">65 g</span></div>
+      </div>
+      <div class="card mb8">
+        <div class="card-title">Règles clés</div>
+        <div class="alert alert-success"><i class="ti ti-lock"></i><span><strong>Protéines = ancre.</strong> 145 g chaque jour, sans exception.</span></div>
+        <div class="alert alert-info"><i class="ti ti-sliders"></i><span><strong>Glucides = levier.</strong> C'est uniquement sur eux qu'on ajuste selon le jour.</span></div>
+        <div class="alert alert-warning"><i class="ti ti-droplet"></i><span>2 L eau / jour · 2,5 L les jours padel</span></div>
+        <div class="alert alert-warning"><i class="ti ti-info-circle"></i><span>Restaurant : viande + légumes. Pas de sauce, pas de pain.</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Journée type — Jour training (1 850 kcal)</div>
+        <div class="meal-block">
+          <div class="meal-time">07h00 — MATIN</div>
+          <div class="meal-name">3 œufs · 150g fromage blanc 0% · 40g flocons d'avoine · 1 fruit · 20g amandes · café</div>
+          <div class="meal-tags"><span class="tag tag-green">P 40g</span><span class="tag tag-blue">G 55g</span><span class="tag tag-orange">L 20g</span><span class="tag tag-purple">560 kcal</span></div>
+        </div>
+        <div class="meal-block">
+          <div class="meal-time">12h30 — DÉJEUNER</div>
+          <div class="meal-name">150g poulet/thon · 100g riz ou patate douce · légumes verts · huile d'olive</div>
+          <div class="meal-tags"><span class="tag tag-green">P 45g</span><span class="tag tag-blue">G 33g</span><span class="tag tag-orange">L 12g</span><span class="tag tag-purple">430 kcal</span></div>
+        </div>
+        <div class="meal-block">
+          <div class="meal-time">16h30 — COLLATION</div>
+          <div class="meal-name">150g fromage blanc 0% · 20g amandes · 2 œufs durs</div>
+          <div class="meal-tags"><span class="tag tag-green">P 30g</span><span class="tag tag-blue">G 8g</span><span class="tag tag-orange">L 13g</span><span class="tag tag-purple">270 kcal</span></div>
+        </div>
+        <div class="meal-block">
+          <div class="meal-time">20h00 — DÎNER</div>
+          <div class="meal-name">150g poisson/viande maigre · légumes à volonté · 80g légumineuses ou 70g riz</div>
+          <div class="meal-tags"><span class="tag tag-green">P 40g</span><span class="tag tag-blue">G 30g</span><span class="tag tag-orange">L 10g</span><span class="tag tag-purple">370 kcal</span></div>
+        </div>
+        <div class="meal-block">
+          <div class="meal-time">22h00 — SOIR</div>
+          <div class="meal-name">150g fromage blanc 0% · 3 c.s. whey neutre · 30g flocons · 10g amandes · 1 carré 85%</div>
+          <div class="meal-tags"><span class="tag tag-green">P 32g</span><span class="tag tag-blue">G 22g</span><span class="tag tag-orange">L 8g</span><span class="tag tag-purple">220 kcal</span></div>
+        </div>
+        <div style="margin-top:10px;padding:10px;background:var(--bg3);border-radius:var(--radius);font-size:12px;color:var(--text3)">
+          <strong style="color:var(--text2)">Total :</strong> ~1 850 kcal · P ~187g · G ~148g · L ~63g
+        </div>
+      </div>
+    </div>
+
+    <!-- PROGRESSION -->
+    <div id="panel-progression" class="panel">
+      <div class="card mb8">
+        <div class="card-title">Ajouter une mesure</div>
+        <div class="prog-form-grid">
+          <div class="form-group"><label class="form-label">Poids (kg)</label><input type="number" class="form-input" id="inPoids" placeholder="65.0" step="0.1" inputmode="decimal"></div>
+          <div class="form-group"><label class="form-label">Tour de taille (cm)</label><input type="number" class="form-input" id="inTaille" placeholder="79" inputmode="decimal"></div>
+          <div class="form-group"><label class="form-label">Tour de bras (cm)</label><input type="number" class="form-input" id="inBras" placeholder="32" inputmode="decimal"></div>
+          <div class="form-group"><label class="form-label">Énergie /5</label>
+            <select class="form-select" id="inEnergie">
+              <option value="5">5 — Optimal</option><option value="4">4 — Bien</option>
+              <option value="3" selected>3 — Moyen</option><option value="2">2 — Fatigué</option>
+              <option value="1">1 — Épuisé</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-green btn-lg" onclick="addProgressEntry()"><i class="ti ti-plus"></i> Enregistrer la mesure</button>
+      </div>
+      <div class="card mb8">
+        <div class="card-title">Signaux à surveiller</div>
+        <div class="alert alert-success"><i class="ti ti-check"></i><span><strong>Tour de taille ↓ + perfs stables</strong> → tu es dans la bonne fenêtre</span></div>
+        <div class="alert alert-warning"><i class="ti ti-minus"></i><span><strong>Tour de taille stable 2 sem.</strong> → déficit insuffisant · réduire glucides de 20g</span></div>
+        <div class="alert alert-danger"><i class="ti ti-alert-triangle"></i><span><strong>Perfs en baisse + fatigue</strong> → semaine Deload immédiate</span></div>
+      </div>
+      <div class="card">
+        <div class="flex-between mb8">
+          <div class="card-title" style="margin-bottom:0">Suivi</div>
+          <button class="btn btn-icon btn-red" onclick="clearProgress()"><i class="ti ti-trash"></i></button>
+        </div>
+        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+          <table class="prog-table" style="min-width:400px">
+            <thead><tr><th>Date</th><th>Poids</th><th>Taille</th><th>Bras</th><th>Énergie</th></tr></thead>
+            <tbody id="progLog"></tbody>
+          </table>
+        </div>
+        <div id="progEmpty" class="empty-state" style="display:none"><i class="ti ti-chart-line"></i><p>Aucune mesure enregistrée.<br>Commence le lundi matin, à jeun.</p></div>
+      </div>
+    </div>
+
+    <!-- GLOSSAIRE -->
+    <div id="panel-glossaire" class="panel">
+      <div class="card mb8"><div class="card-title">Termes nutritionnels</div><div class="gloss-grid" id="glossNutri"></div></div>
+      <div class="card"><div class="card-title">Exercices expliqués</div><div class="gloss-grid" id="glossSport"></div></div>
+    </div>
+
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="showPanel('dashboard',this)"><i class="ti ti-layout-dashboard"></i><span>Accueil</span></button>
+    <button class="nav-btn" onclick="showPanel('log',this)"><i class="ti ti-pencil-plus"></i><span>Log séance</span></button>
+    <button class="nav-btn" onclick="showPanel('programme',this)"><i class="ti ti-barbell"></i><span>Programme</span></button>
+    <button class="nav-btn" onclick="showPanel('nutrition',this)"><i class="ti ti-salad"></i><span>Nutrition</span></button>
+    <button class="nav-btn" onclick="showPanel('progression',this)"><i class="ti ti-trending-up"></i><span>Progrès</span></button>
+    <button class="nav-btn" onclick="showPanel('glossaire',this)"><i class="ti ti-book"></i><span>Glossaire</span></button>
+  </nav>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ===================== DATA =====================
+const EX = {
+  A:[
+    {id:'echauff',name:'Échauffement — Corde à sauter',muscle:'Cardio léger · Coordination',sets:'1',reps:'3 min',rest:'—',desc:'Sauter à la corde à intensité faible 3 minutes. Si cheville instable : 3 min de rotations d\'épaules + cercles de hanches + montées genoux sur place.',tag:'tag-blue'},
+    {id:'devCouche',name:'Développé couché — barre',muscle:'Pectoraux · Épaules · Triceps',sets:'4',reps:'8–10',rest:'75s',desc:'Allongé sur banc PLAT. Barre à largeur d\'épaules. Descends lentement jusqu\'à effleurer le torse, repousse. Omoplates serrées, dos légèrement cambré. Départ : 20–25 kg. Surcharge : +2,5 kg dès 10 reps 2 séances de suite.',tag:'tag-green'},
+    {id:'devIncline',name:'Développé incliné — haltères',muscle:'Pectoraux hauts · Épaules',sets:'3',reps:'10–12',rest:'60s',desc:'Banc à 30–45°. Haltères à hauteur des épaules, paumes vers l\'avant. Pousse vers le haut en arc de cercle. Transfert direct sur le smash au padel. Charge : 2×8–10 kg.',tag:'tag-green'},
+    {id:'elevLat',name:'Élévations latérales — haltères',muscle:'Deltoïde médial',sets:'3',reps:'12–15',rest:'60s',desc:'Bras légèrement fléchis, lève latéralement jusqu\'à hauteur d\'épaule SEULEMENT. Charge très légère obligatoire (2–4 kg). Mouvement lent et contrôlé uniquement.',tag:'tag-orange'},
+    {id:'dips',name:'Dips — chaise',muscle:'Triceps · Bas des pectoraux',sets:'3',reps:'10–15',rest:'60s',desc:'Mains sur l\'assise d\'une chaise derrière toi, jambes tendues. Coudes vers l\'arrière. Descends à 90°, remonte. Poids du corps uniquement.',tag:'tag-purple'},
+    {id:'pompesSerrees',name:'Pompes prise serrée — triceps',muscle:'Triceps',sets:'3',reps:'12',rest:'45s',desc:'Mains rapprochées (largeur épaules ou moins). Coudes collés au corps pendant tout le mouvement. Trop facile : pieds surélevés sur le banc.',tag:'tag-purple'},
+    {id:'planche',name:'Gainage planche',muscle:'Abdos profonds · Lombaires',sets:'3',reps:'30–45s',rest:'45s',desc:'Sur les avant-bras, corps droit de la tête aux talons. Contracte abdos ET fessiers en même temps. Progression : frontale → latérale droite → latérale gauche.',tag:'tag-red'},
+    {id:'roulette',name:'Roulette abdos (ab wheel)',muscle:'Abdos profonds · Gainage total',sets:'3',reps:'8–12',rest:'60s',desc:'À genoux, roule vers l\'avant en gardant le corps RIGIDE. Arrête AVANT que le dos s\'arque. Reviens en contractant les abdos. Commence avec 1/3 d\'amplitude.',tag:'tag-red'},
+  ],
+  B:[
+    {id:'goodMorning',name:'Good morning — barre légère',muscle:'Lombaires · Ischio-jambiers',sets:'3',reps:'12',rest:'60s',desc:'Barre sur les trapèzes. Genoux légèrement fléchis. Incline le buste vers l\'avant en gardant le DOS DROIT. Ressens l\'étirement dans les ischio. Remonte. Charge : barre seule ou 10 kg max au début.',tag:'tag-orange'},
+    {id:'curlBarre',name:'Curl barre — biceps',muscle:'Biceps',sets:'4',reps:'10–12',rest:'75s',desc:'Coudes FIXES le long du corps — règle absolue. Fléchis les avant-bras vers les épaules. Redescends lentement en 2 secondes. Départ : 15–20 kg.',tag:'tag-green'},
+    {id:'curlMarteau',name:'Curl marteau — haltères',muscle:'Biceps · Avant-bras',sets:'3',reps:'12',rest:'60s',desc:'Haltères à la verticale (pouce vers le haut). Même mouvement que le curl. Travaille aussi le brachio-radial, moins de stress sur le poignet. Charge : 2×10–12 kg.',tag:'tag-green'},
+    {id:'rowing',name:'Rowing 1 bras — haltère sur banc',muscle:'Grand dorsal · Biceps',sets:'3',reps:'10–12',rest:'60s',desc:'Un genou et une main sur le banc, corps horizontal. Tire vers ta HANCHE (pas l\'épaule), coude proche du corps. Dos horizontal, pas arqué. Charge : 12 kg.',tag:'tag-blue'},
+    {id:'tirageElastique',name:'Tirage élastique — dos large',muscle:'Grand dorsal · Rhomboïdes',sets:'3',reps:'15',rest:'45s',desc:'Élastique à hauteur de tête. Tire vers toi en écartant les coudes, comme si tu cassais un stylo avec tes omoplates. Mouvement lent, contraction maximale.',tag:'tag-blue'},
+    {id:'hipHinge',name:'Hip hinge KB — Soulevé de terre roumain',muscle:'Ischio-jambiers · Fessiers',sets:'4',reps:'10',rest:'75s',desc:'Pousse les HANCHES EN ARRIÈRE (pas les genoux en avant), KB descend le long des jambes. Dos DROIT, regard légèrement vers le bas. Contracte les fessiers en remontant. Si le dos chauffe : passe au pont fessier.',tag:'tag-orange'},
+    {id:'pontFessier',name:'Pont fessier — avec poids aux chevilles',muscle:'Fessiers · Ischio-jambiers',sets:'3',reps:'15–20',rest:'45s',desc:'Allongé sur le dos, genoux à 90°. Poids aux chevilles. Soulève le bassin en contractant les fessiers. Tiens 1 seconde en haut. Redescends sans poser complètement.',tag:'tag-orange'},
+    {id:'crunchBicycle',name:'Crunch bicycle + gainage latéral',muscle:'Abdos · Obliques',sets:'3',reps:'20 + 30s',rest:'45s',desc:'Bicycle : coude droit vers genou gauche en alternance — 20 reps. Puis gainage latéral sur l\'avant-bras, 30 secondes chaque côté.',tag:'tag-red'},
+  ],
+  C:[
+    {id:'pompesNorm',name:'Pompes prise normale',muscle:'Pectoraux · Triceps · Épaules',sets:'3',reps:'Max-2',rest:'45s',desc:'Corps droit, descends à 1 cm du sol. Fais le maximum MOINS 2 reps. Trop facile : pieds surélevés sur le banc.',tag:'tag-green'},
+    {id:'squatGobelet',name:'Squat gobelet KB 12 kg',muscle:'Cuisses · Fessiers',sets:'3',reps:'15',rest:'60s',desc:'KB à 2 mains contre la poitrine. Descends comme pour t\'asseoir sur une chaise basse, cuisses parallèles. Poitrine haute, genoux dans l\'axe des orteils.',tag:'tag-blue'},
+    {id:'supersetCurlDev',name:'Curl haltères + Développé épaules (superset)',muscle:'Biceps · Épaules',sets:'3',reps:'12 + 10',rest:'45s',desc:'Enchaîner sans pause : 12 curls biceps puis 10 développés épaules (haltères au-dessus de la tête). Repos 45s après les 2 exercices. Charge : 2×8 kg.',tag:'tag-orange'},
+    {id:'supersetHipRow',name:'Hip hinge KB + Rowing 1 bras (superset)',muscle:'Dos · Ischio-jambiers',sets:'3',reps:'10 + 10',rest:'60s',desc:'Enchaîner sans pause : 10 hip hinges puis 10 rows d\'un côté + 10 de l\'autre. Voir descriptions complètes dans séances A et B.',tag:'tag-blue'},
+    {id:'plancheRoulette',name:'Gainage planche + Roulette (finisher)',muscle:'Gainage total · Abdos',sets:'2',reps:'30s + 8',rest:'30s',desc:'Enchaîner : 30s planche frontale → 8 roulettes (amplitude réduite à genoux). 2 tours suffisent.',tag:'tag-red'},
+  ],
+  HIIT:[
+    {id:'cordeHiit',name:'Échauffement — Corde à sauter',muscle:'Cardio · Activation générale',sets:'1',reps:'2 min',rest:'30s',desc:'Rythme modéré 2 minutes. NE SAUTE PAS cette étape. Si cheville sensible : 2 min de montées genoux sur place + rotations dynamiques des épaules.',tag:'tag-blue'},
+    {id:'burpees',name:'Burpees',muscle:'Corps entier · Cardio intense',sets:'3',reps:'10',rest:'20s',desc:'Debout → mains au sol → jambes en arrière → pompe optionnelle → jambes revenues → saut vertical. Si cheville fragile : supprime le saut, reviens debout seulement.',tag:'tag-red'},
+    {id:'squatSaute',name:'Squat sauté (ou Squat gobelet KB)',muscle:'Cuisses · Fessiers · Cardio',sets:'3',reps:'12',rest:'20s',desc:'Squat classique puis saut à la remontée, atterrissage genoux fléchis. Si cheville sensible : squat gobelet KB 12 kg sans saut.',tag:'tag-orange'},
+    {id:'mountainClimbers',name:'Mountain Climbers',muscle:'Abdos · Cardio · Épaules',sets:'3',reps:'30 sec',rest:'20s',desc:'Planche haute (bras tendus). Genoux alternés vers la poitrine rapidement. Hanches basses, dos droit. Si poignets gênants : gainage dynamique sur avant-bras.',tag:'tag-red'},
+    {id:'pompesExplosives',name:'Pompes explosives',muscle:'Pectoraux · Triceps · Cardio',sets:'3',reps:'10',rest:'20s',desc:'Remontée EXPLOSIVE (mains qui décollent si possible, sinon remontée très rapide). Descente contrôlée. Tours 2 et 3 : genoux au sol si nécessaire.',tag:'tag-green'},
+    {id:'kbSwing',name:'Kettlebell Swing',muscle:'Fessiers · Ischio · Dos · Cardio',sets:'3',reps:'15',rest:'20s',desc:'KB entre les jambes, hanches en arrière. Lance avec les fessiers et cuisses — c\'est la HANCHE qui propulse, pas les bras. KB monte à hauteur épaule naturellement. Dos DROIT. Si dos chauffe : hip hinge classique.',tag:'tag-orange'},
+    {id:'finisherHiit',name:'Finisher — Planche + Roulette',muscle:'Gainage complet · Abdos profonds',sets:'2',reps:'45s + 8',rest:'30s',desc:'Sans pause : 45s planche frontale → 8 roulettes (genoux au sol, petite amplitude). 2 tours. Si ab wheel trop difficile : 8 crunchs lents avec contraction maximale.',tag:'tag-red'},
+  ]
+};
+
+const GLOSS_NUTRI=[
+  {term:'Protéines',def:'Briques musculaires. 1g=4kcal. Sources : œufs, poulet, thon, fromage blanc. Objectif : 145g/jour — ancre fixe.'},
+  {term:'Glucides',def:'Énergie principale. 1g=4kcal. Levier d\'ajustement : plus les jours training/padel, moins les jours repos. Sources : riz, flocons, fruits.'},
+  {term:'Lipides',def:'Essentiels pour les hormones. 1g=9kcal. Ne jamais éliminer. Sources : huile d\'olive, amandes, jaune d\'œuf.'},
+  {term:'Déficit calorique',def:'Manger 200–300 kcal sous ta dépense. En dessous : risque musculaire. Au-dessus : pas de perte de gras.'},
+  {term:'Recomposition',def:'Perdre du gras ET prendre du muscle. Possible avec 145g+ de protéines + surcharge progressive.'},
+  {term:'NEAT',def:'Calories brûlées hors séance (marche, activité). 8000 pas/jour = +300 kcal sans effort subjectif. Levier très sous-estimé.'},
+  {term:'Macros',def:'Protéines + glucides + lipides. Tracker ses macros = noter les grammes de chaque catégorie chaque jour.'},
+  {term:'Métabolisme de base',def:'Calories brûlées sans rien faire (~1650 kcal/j). Avec ton activité totale : ~2100–2300 kcal/j de dépense.'},
+];
+
+const GLOSS_SPORT=[
+  {term:'Développé couché',def:'Allongé sur banc plat. Descend vers le torse, repousse. Pectoraux, épaules, triceps.'},
+  {term:'Développé incliné',def:'Banc à 30–45°. Cible le haut des pectoraux. Transfert direct sur le smash padel.'},
+  {term:'Curl barre',def:'Coudes fixes, fléchis les avant-bras. Travaille les biceps. Règle absolue : coudes qui ne bougent pas.'},
+  {term:'Curl marteau',def:'Haltère à la verticale (pouce vers le haut). Biceps + avant-bras. Moins de stress sur le poignet.'},
+  {term:'Hip hinge KB',def:'Hanches en arrière, dos droit, KB descend le long des jambes. Ischio + fessiers. Dos DROIT — règle absolue.'},
+  {term:'Rowing 1 bras',def:'Corps horizontal. Tire vers la hanche, coude près du corps. Grand dorsal (dos large).'},
+  {term:'KB Swing',def:'Mouvement balistique. La hanche propulse, pas les bras. Fessiers + ischio + cardio.'},
+  {term:'Pont fessier',def:'Allongé, genoux fléchis. Soulève le bassin en contractant les fessiers. Zéro impact cheville.'},
+  {term:'Gainage planche',def:'Avant-bras, corps droit. Contracte abdos ET fessiers. Protection lombaires essentielle pour le padel.'},
+  {term:'Roulette abdos',def:'Roule vers l\'avant, corps rigide. Arrête avant que le dos s\'arque. Petite amplitude au départ.'},
+  {term:'Surcharge progressive',def:'Augmenter progressivement charge, reps ou séries. Sans ça : entretien seulement, pas de développement.'},
+  {term:'Deload',def:'Semaine à -30% de volume, mêmes charges. Récupération des tendons et du système nerveux. Semaine 7 du cycle.'},
+  {term:'HIIT',def:'Circuit d\'exercices intenses avec courtes pauses. 3 tours, 20s repos entre exercices, 90s entre tours. 2×/semaine max.'},
+  {term:'Superset',def:'2 exercices enchaînés sans pause. Gain de temps + intensité accrue.'},
+  {term:'Squat gobelet',def:'KB contre la poitrine à 2 mains. Plus sécurisé que le squat barre. Cuisses + fessiers.'},
+  {term:'Good morning',def:'Barre sur les trapèzes, buste incliné, dos DROIT. Lombaires + ischio-jambiers.'},
+];
+
+// ===================== STATE =====================
+let currentSeance = null;
+let currentEx = null;
+let currentSessionExercises = [];
+let seriesData = {};
+let serieIdCounter = 0; // FIX: counter garanti unique, jamais de collision
+let timerInterval = null;
+let timerSeconds = 0;
+let toastTimeout = null;
+
+// Safe load
+let sessions = [];
+let progressData = [];
+try { sessions = JSON.parse(localStorage.getItem('fl_sessions') || '[]'); } catch(e) { sessions = []; }
+try { progressData = JSON.parse(localStorage.getItem('fl_progress') || '[]'); } catch(e) { progressData = []; }
+
+// Safe save avec feedback si erreur
+function persistSessions() {
+  try {
+    localStorage.setItem('fl_sessions', JSON.stringify(sessions));
+    return true;
+  } catch(e) {
+    showToast('⚠️ Stockage plein — impossible de sauvegarder');
+    return false;
+  }
+}
+
+// ===================== INIT =====================
+document.addEventListener('DOMContentLoaded', () => {
+  const now = new Date();
+  document.getElementById('dateDisplay').textContent =
+    now.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric', month:'short'});
+  updateStreak();
+  updateTodayAlert();
+  renderWeekStrip();
+  renderGlossaire();
+  renderProgTab('A');
+  renderProgressTable();
+  renderHistory();
+  updateDashStats();
+});
+
+function updateStreak() {
+  document.getElementById('streakCount').textContent = sessions.length > 0 ? Math.min(sessions.length * 2, 30) : 0;
+}
+
+function updateTodayAlert() {
+  const day = new Date().getDay();
+  const cfg = {
+    0: {msg:'Repos actif. Marche légère ou mobilité 10 min.', cls:'alert-warning', icon:'ti-moon'},
+    1: {msg:'Séance A — Poussée. Cible : 1 850 kcal.', cls:'alert-success', icon:'ti-barbell'},
+    2: {msg:'Padel aujourd\'hui. Cible : 2 000 kcal. Hydratation ++.', cls:'alert-info', icon:'ti-tennis'},
+    3: {msg:'Séance B — Tirage + Postérieur.', cls:'alert-success', icon:'ti-barbell'},
+    4: {msg:'HIIT "Je me fracasse" — 20 min. Ou repos.', cls:'alert-danger', icon:'ti-flame'},
+    5: {msg:'Padel aujourd\'hui. Cible : 2 000 kcal. Hydratation ++.', cls:'alert-info', icon:'ti-tennis'},
+    6: {msg:'Séance C ou HIIT — au choix. Repos si fatigue.', cls:'alert-warning', icon:'ti-bolt'},
+  };
+  const c = cfg[day] || cfg[0];
+  const el = document.getElementById('todayAlert');
+  el.className = 'alert ' + c.cls + ' mb8';
+  document.getElementById('todayIcon').className = 'ti ' + c.icon;
+  document.getElementById('todayMsg').textContent = c.msg;
+  // Update dashboard calorie display based on day
+  const calMap = {0:'1 750', 1:'1 850', 2:'2 000', 3:'1 850', 4:'1 750', 5:'2 000', 6:'1 850'};
+  const typeMap = {0:'Jour repos', 1:'Jour training', 2:'Jour padel', 3:'Jour training', 4:'Jour repos', 5:'Jour padel', 6:'Jour training'};
+  document.getElementById('dashCal').innerHTML = calMap[day] + '<span class="stat-unit"> kcal</span>';
+  document.getElementById('dashCalType').textContent = typeMap[day];
+}
+
+function renderWeekStrip() {
+  const days = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+  const plans = [
+    {label:'Repos', color:'var(--text3)', cls:''},
+    {label:'→ A', color:'var(--green)', cls:''},
+    {label:'Padel', color:'var(--blue)', cls:'padel'},
+    {label:'→ B', color:'var(--green)', cls:''},
+    {label:'HIIT', color:'var(--red)', cls:'hiit-day'},
+    {label:'Padel', color:'var(--blue)', cls:'padel'},
+    {label:'C opt.', color:'var(--orange)', cls:''},
+  ];
+  const today = new Date().getDay();
+  const order = [1,2,3,4,5,6,0];
+  let html = '';
+  order.forEach(d => {
+    const p = plans[d];
+    html += `<div class="day-pill ${p.cls}${d === today ? ' today' : ''}">
+      <div class="day-name">${days[d]}</div>
+      <div class="day-type" style="color:${p.color}">${p.label}</div>
+    </div>`;
+  });
+  document.getElementById('weekStrip').innerHTML = html;
+}
+
+function updateDashStats() {
+  if (progressData.length === 0) return;
+  const last = progressData[progressData.length - 1];
+  document.getElementById('dashPoids').innerHTML = last.poids + '<span class="stat-unit"> kg</span>';
+  document.getElementById('dashTaille').innerHTML = last.taille + '<span class="stat-unit"> cm</span>';
+  if (progressData.length > 1) {
+    const prev = progressData[progressData.length - 2];
+    if (last.poids !== '—' && prev.poids !== '—') {
+      const d = (parseFloat(last.poids) - parseFloat(prev.poids)).toFixed(1);
+      const el = document.getElementById('dashPoidsEvo');
+      el.textContent = (d > 0 ? '+' : '') + d + ' kg';
+      el.style.color = d < 0 ? 'var(--green)' : d > 0 ? 'var(--red)' : 'var(--text3)';
+    }
+    if (last.taille !== '—' && prev.taille !== '—') {
+      const d = (parseFloat(last.taille) - parseFloat(prev.taille)).toFixed(1);
+      const el = document.getElementById('dashTailleEvo');
+      el.textContent = (d > 0 ? '+' : '') + d + ' cm';
+      el.style.color = d < 0 ? 'var(--green)' : d > 0 ? 'var(--red)' : 'var(--text3)';
+    }
+  }
+}
+
+// ===================== PANELS =====================
+function showPanel(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('mainContent').scrollTop = 0;
+  if (id === 'progression') renderProgressTable();
+  if (id === 'log') renderHistory();
+}
+
+// ===================== LOG SÉANCE =====================
+function showLogTab(id, btn) {
+  document.getElementById('logTab-new').style.display = id === 'new' ? 'block' : 'none';
+  document.getElementById('logTab-history').style.display = id === 'history' ? 'block' : 'none';
+  btn.closest('.seg-tabs').querySelectorAll('.seg-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  if (id === 'history') renderHistory();
+}
+
+function selectSeance(type, btn) {
+  if (currentSessionExercises.length > 0 && currentSeance !== type) {
+    if (!confirm('Changer de séance effacera les exercices en cours. Continuer ?')) return;
+  }
+  currentSeance = type;
+  currentSessionExercises = [];
+  seriesData = {};
+  document.querySelectorAll('.seance-btn').forEach(b => b.className = 'seance-btn');
+  btn.classList.add('sel-' + type);
+  const alerts = {
+    A: '<div class="alert alert-warning"><i class="ti ti-alert-triangle"></i><span>Cheville : si instable, remplace la corde par 3 min de mobilité épaules.</span></div>',
+    B: '<div class="alert alert-warning"><i class="ti ti-alert-triangle"></i><span>Dos : si le bas du dos chauffe sur le Hip Hinge, passe au Pont fessier.</span></div>',
+    C: '',
+    HIIT: '<div class="alert alert-danger"><i class="ti ti-flame"></i><span>Circuit 3 tours · 20s repos entre exercices · 90s repos entre tours · Supprimer les sauts si cheville douloureuse.</span></div>'
+  };
+  const alertEl = document.getElementById('seanceAlert');
+  alertEl.innerHTML = alerts[type] || '';
+  alertEl.style.display = alerts[type] ? 'block' : 'none';
+  document.getElementById('stepExercices').style.display = 'block';
+  document.getElementById('stepSeries').style.display = 'none';
+  updateCurrentSessionCard();
+  renderExPicker();
+}
+
+function resetSeance() {
+  currentSeance = null; currentEx = null;
+  currentSessionExercises = []; seriesData = {};
+  document.querySelectorAll('.seance-btn').forEach(b => b.className = 'seance-btn');
+  document.getElementById('stepExercices').style.display = 'none';
+  document.getElementById('stepSeries').style.display = 'none';
+  document.getElementById('currentSessionCard').style.display = 'none';
+  document.getElementById('seanceAlert').style.display = 'none';
+  stopTimer();
+}
+
+function renderExPicker() {
+  if (!currentSeance) return;
+  const exs = EX[currentSeance] || [];
+  const doneIds = currentSessionExercises.map(e => e.id);
+  document.getElementById('exPickerList').innerHTML = exs.map(ex => {
+    const done = doneIds.includes(ex.id);
+    return `<button class="ex-pick-btn${done ? ' selected' : ''}" onclick="selectEx('${ex.id}')">
+      <div><div class="ex-pick-name">${ex.name}</div><div class="ex-pick-muscle">${ex.muscle}</div></div>
+      <i class="ti ti-${done ? 'check' : 'chevron-right'}"></i>
+    </button>`;
+  }).join('');
+}
+
+function selectEx(id) {
+  if (!currentSeance) return;
+  const ex = EX[currentSeance].find(e => e.id === id);
+  if (!ex) return;
+  currentEx = ex;
+  seriesData = {}; // Reset pour ce nouvel exercice
+  document.getElementById('stepSeries').style.display = 'block';
+  document.getElementById('stepExercices').style.display = 'none';
+  document.getElementById('currentExName').textContent = ex.name;
+  document.getElementById('currentExMuscle').textContent = ex.muscle;
+  document.getElementById('currentExDesc').textContent = ex.desc;
+  document.getElementById('seriesContainer').innerHTML = '';
+  document.getElementById('restTimerBlock').style.display = 'none';
+  stopTimer();
+  const n = parseInt(ex.sets) || 3;
+  for (let i = 1; i <= n; i++) addSerieRow(i);
+}
+
+function addSerieRow(num) {
+  serieIdCounter++; // FIX: compteur incrémental — ID garanti unique
+  const id = 'sr_' + serieIdCounter;
+  seriesData[id] = {reps: 10, kg: 0, done: false};
+  const row = document.createElement('div');
+  row.className = 'serie-row';
+  row.id = 'row_' + id;
+  row.innerHTML = `
+    <div class="serie-num">${num}</div>
+    <div class="num-input-wrap">
+      <div class="num-input-label">Reps</div>
+      <div class="num-stepper">
+        <button class="step-btn" onclick="stepVal('${id}','reps',-1)">−</button>
+        <span class="step-val" id="reps_${id}">10</span>
+        <button class="step-btn" onclick="stepVal('${id}','reps',1)">+</button>
+      </div>
+    </div>
+    <div class="num-input-wrap">
+      <div class="num-input-label">Kg</div>
+      <div class="num-stepper">
+        <button class="step-btn" onclick="stepVal('${id}','kg',-2.5)">−</button>
+        <span class="step-val" id="kg_${id}">0</span>
+        <button class="step-btn" onclick="stepVal('${id}','kg',2.5)">+</button>
+      </div>
+    </div>
+    <button class="serie-done-btn" id="done_${id}" onclick="toggleDone('${id}')"><i class="ti ti-check"></i></button>`;
+  document.getElementById('seriesContainer').appendChild(row);
+}
+
+function addSerie() {
+  addSerieRow(document.querySelectorAll('.serie-row').length + 1);
+}
+
+function stepVal(id, field, delta) {
+  if (!seriesData[id]) return;
+  let val = seriesData[id][field] + delta;
+  if (field === 'reps') val = Math.max(1, Math.round(val));
+  if (field === 'kg') val = Math.max(0, Math.round(val * 2) / 2);
+  seriesData[id][field] = val;
+  document.getElementById(field + '_' + id).textContent =
+    field === 'kg' ? (val % 1 === 0 ? val : val.toFixed(1)) : val;
+}
+
+function toggleDone(id) {
+  if (!seriesData[id]) return;
+  seriesData[id].done = !seriesData[id].done;
+  const btn = document.getElementById('done_' + id);
+  if (btn) btn.classList.toggle('done', seriesData[id].done);
+  if (seriesData[id].done) {
+    document.getElementById('restTimerBlock').style.display = 'flex';
+    setTimer(75);
+  }
+}
+
+function saveCurrentEx() {
+  if (!currentEx || !currentSeance) { showToast('Sélectionne un exercice'); return; }
+  const sets = Object.values(seriesData).filter(s => s.reps > 0).map(s => ({reps:s.reps, kg:s.kg, done:s.done}));
+  if (sets.length === 0) { showToast('Ajoute au moins une série'); return; }
+  const entry = {id: currentEx.id, name: currentEx.name, sets};
+  const idx = currentSessionExercises.findIndex(e => e.id === currentEx.id);
+  if (idx >= 0) currentSessionExercises[idx] = entry;
+  else currentSessionExercises.push(entry);
+  document.getElementById('stepSeries').style.display = 'none';
+  document.getElementById('stepExercices').style.display = 'block';
+  stopTimer();
+  renderExPicker();
+  updateCurrentSessionCard();
+  showToast('✓ ' + currentEx.name + ' enregistré');
+}
+
+function backToExList() {
+  document.getElementById('stepSeries').style.display = 'none';
+  document.getElementById('stepExercices').style.display = 'block';
+  stopTimer();
+}
+
+function updateCurrentSessionCard() {
+  const card = document.getElementById('currentSessionCard');
+  if (currentSessionExercises.length === 0) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  const tMap = {A:['tag-green','Séance A'], B:['tag-blue','Séance B'], C:['tag-orange','Séance C'], HIIT:['tag-red','HIIT']};
+  const t = tMap[currentSeance] || ['tag-green', currentSeance];
+  const badge = document.getElementById('currentSessionType');
+  badge.className = 'tag ' + t[0];
+  badge.textContent = t[1];
+  document.getElementById('currentSessionSummary').innerHTML = currentSessionExercises.map(ex => {
+    const chips = ex.sets.map(s => `<span class="log-set-chip">${s.reps}r${s.kg > 0 ? ' · ' + s.kg + 'kg' : ''}</span>`).join('');
+    return `<div class="log-ex-item"><div class="log-ex-name">${ex.name}</div><div class="log-sets-row">${chips}</div></div>`;
+  }).join('');
+}
+
+function finishSession() {
+  if (currentSessionExercises.length === 0) { showToast('Aucun exercice enregistré'); return; }
+  const session = {
+    date: new Date().toISOString(),
+    type: currentSeance,
+    exercises: JSON.parse(JSON.stringify(currentSessionExercises)) // Deep clone
+  };
+  sessions.unshift(session);
+  if (persistSessions()) { // FIX: vérifie que la sauvegarde a réussi
+    showToast('💪 Séance ' + session.type + ' sauvegardée !');
+    resetSeance();
+    updateStreak();
+    renderHistory();
+  } else {
+    sessions.shift(); // Annule si échec
+  }
+}
+
+function renderHistory() {
+  const el = document.getElementById('historyList');
+  if (sessions.length === 0) {
+    el.innerHTML = '<div class="empty-state"><i class="ti ti-history"></i><p>Aucune séance enregistrée.<br>Commence ton premier log !</p></div>';
+    return;
+  }
+  const tMap = {
+    A:{label:'Séance A — Poussée', cls:'tag-green'},
+    B:{label:'Séance B — Tirage', cls:'tag-blue'},
+    C:{label:'Séance C — Express', cls:'tag-orange'},
+    HIIT:{label:'HIIT — Je me fracasse', cls:'tag-red'}
+  };
+  el.innerHTML = sessions.map((s, i) => {
+    const d = new Date(s.date).toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    const t = tMap[s.type] || {label:'Séance', cls:'tag-green'};
+    const exHtml = s.exercises.map(ex => {
+      const chips = ex.sets.map(st => `<span class="log-set-chip">${st.reps}r${st.kg > 0 ? ' · ' + st.kg + 'kg' : ''}</span>`).join('');
+      return `<div class="log-ex-item"><div class="log-ex-name">${ex.name}</div><div class="log-sets-row">${chips}</div></div>`;
+    }).join('');
+    return `<div class="log-session">
+      <div class="log-session-header">
+        <div class="log-session-date">${d}</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span class="tag ${t.cls}">${t.label}</span>
+          <button class="btn btn-icon btn-red" onclick="deleteSession(${i})" style="padding:4px"><i class="ti ti-trash" style="font-size:14px"></i></button>
+        </div>
+      </div>${exHtml}</div>`;
+  }).join('');
+}
+
+function deleteSession(i) {
+  if (!confirm('Supprimer cette séance ?')) return;
+  sessions.splice(i, 1);
+  persistSessions();
+  renderHistory();
+  updateStreak();
+  showToast('Séance supprimée');
+}
+
+// ===================== TIMER =====================
+function setTimer(sec) {
+  stopTimer();
+  timerSeconds = sec;
+  updateTimerDisplay();
+  document.getElementById('restTimerBlock').style.display = 'flex';
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    if (timerSeconds <= 0) { stopTimer(); showToast('⏱ C\'est parti !'); return; }
+    updateTimerDisplay();
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null; timerSeconds = 0;
+  const d = document.getElementById('timerDisplay');
+  if (d) d.textContent = '—';
+  const b = document.getElementById('restTimerBlock');
+  if (b) b.style.display = 'none';
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timerSeconds / 60), s = timerSeconds % 60;
+  const d = document.getElementById('timerDisplay');
+  if (d) d.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+// ===================== PROGRAMME =====================
+function showProgTab(id, btn) {
+  btn.closest('.seg-tabs').querySelectorAll('.seg-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderProgTab(id);
+}
+
+function renderProgTab(id) {
+  const el = document.getElementById('progTabContent');
+  if (id === 'prog') {
+    el.innerHTML = `<div class="card mb8">
+      <div class="card-title">Surcharge progressive — règle des 2 séances</div>
+      <div class="step-row"><div class="step-num">1</div><div><div class="step-title">Tu atteins les reps max 2 séances de suite</div><div class="step-desc">→ Ajoute 2,5 kg à la prochaine séance. Repars à 8–9 reps.</div></div></div>
+      <div class="step-row"><div class="step-num">2</div><div><div class="step-title">Stagnation 3 semaines (mêmes charges, mêmes reps)</div><div class="step-desc">→ Change la variation OU ajoute une série. Pas les deux.</div></div></div>
+      <div class="step-row"><div class="step-num">3</div><div><div class="step-title">Semaine 7 : Deload obligatoire</div><div class="step-desc">→ -30% volume (2 séries au lieu de 3–4). Mêmes charges.</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Calendrier 8 semaines</div>
+      ${[['S1–S2','Baseline — trouver les charges de départ','3 séries · Modéré','60–70%'],
+         ['S3–S4','Surcharge progressive (+2,5 kg dès que possible)','3–4 séries · Modéré','70–80%'],
+         ['S5–S6','Proche de l\'échec (2 reps en réserve)','4 séries · Élevé','75–85%'],
+         ['S7','Deload — récupération profonde','2 séries · Réduit','60–65%'],
+         ['S8','Test PRs sur les exercices principaux','3 séries · Modéré','85–90%']]
+        .map(r => `<div style="display:grid;grid-template-columns:60px 1fr;gap:8px;padding:9px 0;border-bottom:1px solid var(--border)">
+          <span style="font-weight:700;color:var(--green);font-size:13px">${r[0]}</span>
+          <div><div style="font-size:13px">${r[1]}</div><div style="font-size:11px;color:var(--text3);margin-top:2px">${r[2]} · ${r[3]}</div></div>
+        </div>`).join('')}
+    </div>`;
+    return;
+  }
+  const exs = EX[id] || [];
+  const cfg = {
+    A:{title:'Séance A — Poussée + Gainage', sub:'35–45 min · Pectoraux, épaules, triceps, gainage', alert:'Cheville : si instable, remplace la corde par 3 min de mobilité épaules.', ac:'warning'},
+    B:{title:'Séance B — Tirage + Postérieur', sub:'40–50 min · Dos, biceps, ischio-jambiers, fessiers', alert:'Dos : si le bas du dos chauffe sur le Hip Hinge, passe au Pont fessier.', ac:'warning'},
+    C:{title:'Séance C — Corps entier Express', sub:'25–35 min · Circuit minimal efficace · Optionnelle', alert:'', ac:''},
+    HIIT:{title:'HIIT — Je me fracasse', sub:'20–25 min · 3 tours · 20s repos entre exercices · 90s entre tours', alert:'Cheville : remplace les exercices à impact par variantes sans saut.', ac:'danger'}
+  };
+  const c = cfg[id] || {title:'Séance', sub:'', alert:'', ac:''};
+  let html = `<div style="margin-bottom:10px"><div style="font-size:16px;font-weight:600">${c.title}</div><div style="font-size:12px;color:var(--text2);margin-top:2px">${c.sub}</div></div>`;
+  if (c.alert) html += `<div class="alert alert-${c.ac} mb8"><i class="ti ti-alert-triangle"></i><span>${c.alert}</span></div>`;
+  if (id === 'HIIT') html += `<div class="alert alert-danger mb8"><i class="ti ti-bolt"></i><span><strong>Circuit :</strong> Tous les exercices dans l'ordre, 20s de repos entre eux. Après le dernier : 90s. Répète 3 fois.</span></div>`;
+  const unit = id === 'HIIT' ? 'tour' : 'séries';
+  exs.forEach((ex, i) => {
+    html += `<div class="ex-card" onclick="toggleExDesc(${i},'${id}')">
+      <div class="ex-card-header">
+        <div style="flex:1"><div class="ex-card-name">${ex.name}</div></div>
+        <span class="tag ${ex.tag}" style="flex-shrink:0">${ex.muscle.split('·')[0].trim()}</span>
+      </div>
+      <div class="ex-card-meta">
+        <span class="ex-meta-item"><i class="ti ti-repeat"></i>${ex.sets} ${unit}</span>
+        <span class="ex-meta-item"><i class="ti ti-target"></i>${ex.reps}</span>
+        <span class="ex-meta-item"><i class="ti ti-clock"></i>${ex.rest}</span>
+      </div>
+      <div class="ex-card-desc" id="exdesc_${id}_${i}">${ex.desc}</div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
+function toggleExDesc(i, seance) {
+  const el = document.getElementById('exdesc_' + seance + '_' + i);
+  if (el) el.classList.toggle('open');
+}
+
+// ===================== NUTRITION =====================
+function updateNutriDay(val) {
+  const d = {normal:{cal:'1 850 kcal', gluc:'146 g'}, padel:{cal:'2 000 kcal', gluc:'170 g'}, repos:{cal:'1 750 kcal', gluc:'130 g'}};
+  document.getElementById('nCal').textContent = d[val].cal;
+  document.getElementById('nGluc').textContent = d[val].gluc;
+}
+
+// ===================== PROGRESSION =====================
+function addProgressEntry() {
+  const poids = document.getElementById('inPoids').value;
+  const taille = document.getElementById('inTaille').value;
+  const bras = document.getElementById('inBras').value;
+  const energie = document.getElementById('inEnergie').value;
+  if (!poids && !taille) { showToast('Remplis au moins poids ou tour de taille'); return; }
+  progressData.push({date: new Date().toISOString(), poids: poids||'—', taille: taille||'—', bras: bras||'—', energie: parseInt(energie)});
+  try { localStorage.setItem('fl_progress', JSON.stringify(progressData)); } catch(e) { showToast('⚠️ Erreur stockage'); progressData.pop(); return; }
+  ['inPoids','inTaille','inBras'].forEach(id => { document.getElementById(id).value = ''; });
+  renderProgressTable();
+  updateDashStats();
+  showToast('✓ Mesure enregistrée');
+}
+
+function renderProgressTable() {
+  const tbody = document.getElementById('progLog');
+  const empty = document.getElementById('progEmpty');
+  if (progressData.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = progressData.slice().reverse().map(e => {
+    const d = new Date(e.date).toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
+    const c = e.energie >= 4 ? 'var(--green)' : e.energie >= 3 ? 'var(--orange)' : 'var(--red)';
+    return `<tr><td>${d}</td><td><strong>${e.poids}</strong> kg</td><td>${e.taille} cm</td><td>${e.bras} cm</td><td style="color:${c}">${e.energie}/5</td></tr>`;
+  }).join('');
+}
+
+function clearProgress() {
+  if (!confirm('Effacer toutes les mesures ?')) return;
+  progressData = [];
+  localStorage.removeItem('fl_progress');
+  renderProgressTable();
+  updateDashStats();
+  showToast('Données effacées');
+}
+
+// ===================== GLOSSAIRE =====================
+function renderGlossaire() {
+  document.getElementById('glossNutri').innerHTML = GLOSS_NUTRI.map(g =>
+    `<div class="gloss-item"><div class="gloss-term">${g.term}</div><div class="gloss-def">${g.def}</div></div>`).join('');
+  document.getElementById('glossSport').innerHTML = GLOSS_SPORT.map(g =>
+    `<div class="gloss-item"><div class="gloss-term">${g.term}</div><div class="gloss-def">${g.def}</div></div>`).join('');
+}
+
+// ===================== TOAST =====================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => t.classList.remove('show'), 2400);
+}
+</script>
+</body>
+</html>
